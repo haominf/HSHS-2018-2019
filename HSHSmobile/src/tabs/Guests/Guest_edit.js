@@ -20,8 +20,8 @@ import {
     ScrollView
 } from 'react-native';
 import {connect} from 'react-redux';
+import ColorPicker from '../../modules/ColorPicker';
 import {addNewGuest} from '../../redux/actions.js';
-
 import {Button, ButtonGroup} from 'react-native-elements';
 const ageButtons = ['Young', 'Middle', 'Old'];
 const genderButtons = ['Male', 'Female', 'Others'];
@@ -55,7 +55,8 @@ class NewGuest extends Component<{}> {
             name: "",
             note: "",
             ageIndex: -1,
-            genderIndex: -1
+            genderIndex: -1,
+            color: this.props.color ? this.props.color: null
         };
 
         this.updateAgeIndex = this.updateAgeIndex.bind(this);
@@ -73,6 +74,11 @@ class NewGuest extends Component<{}> {
             return;
         }
 
+        if (!this.state.color) {
+          Alert.alert("Please select a color");
+          return;
+        }
+
         let gender = "";
         if (this.state.genderIndex === 0)
             gender = "M";
@@ -86,7 +92,7 @@ class NewGuest extends Component<{}> {
 
         }
 
-        this.props.addNewGuest(this.state.name, ageButtons[this.state.ageIndex], gender, this.state.note);
+        this.props.addNewGuest(this.state.name, ageButtons[this.state.ageIndex], gender, this.state.note, this.state.color);
         this.props.navigator.pop({
             animated: true, // does the pop have transition animation or does it happen immediately (optional)
             animationType: 'slide-horizontal', // 'fade' (for both) / 'slide-horizontal' (for android) does the pop have different transition animation (optional)
@@ -126,7 +132,8 @@ class NewGuest extends Component<{}> {
                             onPress={(index) => this.updateAgeIndex(index)}
                             selectedIndex={ageIndex}
                             buttons={ageButtons}
-                            containerStyle={{backgroundColor: "#770B16", height: 100}}
+                            buttonStyle={{height: 40}}
+                            containerStyle={{backgroundColor: "#770B16", height: 40}}
                             selectedButtonStyle={styles.selectedButton}
                             underlayColor="#770B16"
                             selectedTextStyle={styles.selectedText}
@@ -139,10 +146,11 @@ class NewGuest extends Component<{}> {
                             onPress={(index) => this.updateGenderIndex(index)}
                             selectedIndex={genderIndex}
                             buttons={genderButtons}
-                            containerStyle={{backgroundColor: "#770B16", height: 100}}
-                            selectedButtonStyle={styles.selectedButton}
+                            buttonStyle={{height: 40}}
+                            containerStyle={{backgroundColor: "rgb(81, 133, 194)", height: 40}}
+                            selectedButtonStyle={styles.selectedButtonL}
                             underlayColor="#770B16"
-                            selectedTextStyle={styles.selectedText}
+                            selectedTextStyle={styles.selectedTextL}
                             textStyle={{color: "#FFFFFF"}}
                         />
                     </View>
@@ -160,10 +168,11 @@ class NewGuest extends Component<{}> {
                             />
                         </View>
                     </View>
+                    <ColorPicker color = {this.state.color} onChange = {(newC) => {this.setState({color: newC});}} />
                     <View style={{marginTop: 20, marginBottom: 20}}>
                         <Button
                             small
-                            backgroundColor="#770B16"
+                            backgroundColor="rgb(86, 95, 98)"
                             onPress={this.submit}
                             title='Submit'/>
                     </View>
@@ -235,14 +244,23 @@ const styles = StyleSheet.create({
         color:"#770B16",
         fontSize: 16,
     },
+    textStyleL: {
+        color: "rgb(81, 133, 194)",
+        fontSize: 16
+    },
     selectedButton: {
-        backgroundColor: "#770B16",
-        color: "#770B16",
+        backgroundColor: "#ffffff",
         borderColor: "#770B16",
-
-
+    },
+    selectedButtonL: {
+        backgroundColor: "#ffffff",
+        borderColor: "rgb(81, 133, 194)",
     },
     selectedText: {
         color: "#770B16"
+    },
+    selectedTextL: {
+        color: "rgb(81, 133, 194)"
     }
+
 });

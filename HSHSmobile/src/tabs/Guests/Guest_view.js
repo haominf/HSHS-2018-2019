@@ -18,8 +18,8 @@ import { List, ListItem } from "react-native-elements";
 import nodeEmoji from 'node-emoji';
 import {connect} from 'react-redux';
 import ActionItemList_module from '../../modules/ActionItemList_module';
+import GuestHistoryModule from '../../modules/GuestHistoryModule';
 import Icon from 'react-native-vector-icons/Feather';
-import Timeline from 'react-native-timeline-listview';
 
 const Timestamp = require('react-timestamp');
 
@@ -30,7 +30,9 @@ function mapStateToProps(state, ownProps) {
         allGuests: state.guests,
         loading: state.loading,
         actionItems: state.actionItems,
-        actionItemIds: state.guestActionItemIds[ownProps.Id]
+        interactions: state.interactions,
+        completedActionItems: state.completedActionItems,
+        actionItemIds: state.guestActionItemIds ? state.guestActionItemIds[ownProps.Id] : null
     };
 }
 
@@ -41,7 +43,6 @@ class GuestProfile extends Component {
         super(props);
         // this.props.navigator.addOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.view_crud_note_page = this.view_crud_note_page.bind(this);
-        this.view_actionitem_page = this.view_actionitem_page.bind(this);
     };
 
     // matching receptivity to emojis {0-4} where 4 is the best and 0 is the worst
@@ -52,21 +53,6 @@ class GuestProfile extends Component {
     // gets emoji from receptive value
     get_receptive = () => {
         return(nodeEmoji.get(this.id_to_emoji[this.profile_data.receptive]));
-    };
-
-
-    view_actionitem_page = (actionItemId) => {
-        this.props.navigator.push({
-            screen: 'ActionItem_view', // unique ID registered with Navigation.registerScreen
-            passProps: {
-                actionItemId: actionItemId,
-            }, // Object that will be passed as props to the pushed screen (optional)
-            animated: true, // does the push have transition animation or does it happen immediately (optional)
-            animationType: 'slide-horizontal', // ‘fade’ (for both) / ‘slide-horizontal’ (for android) does the push have different transition animation (optional)
-            backButtonHidden: false, // hide the back button altogether (optional)
-            navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
-            navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
-        });
     };
 
     //
@@ -202,6 +188,7 @@ class GuestProfile extends Component {
                             guestActionItemIds={this.props.actionItemIds}
                             selectedGuestId={this.props.guestId}
                             guests={this.props.allGuests}
+                            hideSearch={true}
                             navigator={this.props.navigator} />
         )
     }
@@ -224,94 +211,6 @@ class GuestProfile extends Component {
         )
     }
 
-    renderDetail = (rowData, _sectionID, _rowID) => {
-        let title = <Text>{rowData.time}</Text>
-        var desc = null
-        if(rowData.isActionItem) {
-          let completionText = (rowData.isDone ? "Complete Task" :
-                                                  "Incomplete Task");
-          desc = (
-            <View style={{flexDirection: 'column', marginLeft:10}}>
-              <Text style={{fontWeight: 'bold'}}>{completionText}</Text>
-              <View style={{flexDirection: 'row'}}>
-                <TouchableOpacity
-                style={{flex:99, borderColor: '#464646', borderLeftColor: 'blue', padding: 5, borderWidth: 1, borderLeftWidth: 10, borderRightWidth: 0}}
-                onPress={() => this.view_actionitem_page(rowData.actionItemId)}
-                >
-                  <Text>{rowData.title}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )
-        } //else if ()
-
-        return (
-          <View style={{flex:1}}>
-            {title}
-            {desc}
-          </View>
-        )
-      }
-
-    // Once interactions are added to Guest schema, interpolate w/ actionItems
-    // and render in the list.
-    renderHistory = () => {
-        let allActionItems = Object.values(this.props.actionItems);
-
-        let relatedActionItems = allActionItems.filter((actionItem) =>
-                     { // Filter list to only include action items related to guest
-                        if (actionItem.guestIds != undefined) {
-                          return actionItem.guestIds.includes(this.props.guestId)
-                        }
-                      });
-
-        // background color - d7d7d7
-        // date color- 464646
-        // link color- 31a7f8
-
-        if (relatedActionItems.length == 0) {
-            return (
-                <View style={styles.historyContainer}>
-                    <Text style={styles.historyHeader}>Guest History</Text>
-                    <Text>No action items or interactions to display!</Text>
-                </View>
-            );
-        }
-        let data = relatedActionItems.map((i) =>
-                      {
-                        // check date
-                        let date = new Date(i.creationTimestamp).toDateString();
-                        // re add color
-
-                        return ({time: date,
-                                title: i.title,
-                                color: i.color,
-                                description: i.description,
-                                isActionItem: true,
-                                actionItemId: i.actionItemId,
-                                isDone: i.isDone})
-                        })
-
-        return (
-          <View>
-            <Text style={styles.historyHeader}>Guest History</Text>
-            <Timeline
-              data={data}
-              showTime={false}
-              lineColor='#808080'
-              circleColor='red'
-              descriptionStyle={{color:'gray'}}
-              detailContainerStyle={styles.timelineDetailContainer}
-              columnFormat='single-column-left'
-              renderDetail={this.renderDetail}
-              options={{
-                style:{paddingTop:10, flex:1}
-              }}
-            />
-          </View>
-        );
-
-    }
 
     render() {
         return (
@@ -325,12 +224,26 @@ class GuestProfile extends Component {
                         {/*{this.render_receptive()}*/}
                     </View>
                 </View>
-                <View style={{flex: .3}}>
+                <View style={{
+                    flex: .3,
+                    marginBottom: "5%",
+                    marginLeft:"5%",
+                    marginRight:"5%",
+                    marginTop: "2%",
+                    borderWidth: StyleSheet.hairlineWidth,
+                    borderColor: '#3a4548'
+                 }}>
                     {this._renderActionItems()}
-                    {this._renderButtons()}
+                    {/* {this._renderButtons()} */}
                 </View>
-                <View style={{flex: .2}}>
-                  {this.renderHistory()}
+                <View style={{flex: .2, paddingRight: "2%", paddingLeft: "2%"}}>
+                    <GuestHistoryModule
+                        interactions={this.props.interactions}
+                        completedActionItems={this.props.completedActionItems}
+                        guestId={this.props.guestId}
+                        navigator={this.props.navigator}
+                        allGuests={this.props.allGuests}
+                    />
                 </View>
             </ScrollView>
         );
@@ -341,7 +254,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#F7F7F7',
     },
     buttonText: {
         color: 'white'
@@ -360,9 +273,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 15,
         borderBottomWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: '#D3D3D3',
+        borderBottomColor: '#3a4548',
         borderTopWidth: StyleSheet.hairlineWidth,
-        borderTopColor: '#D3D3D3',
+        borderTopColor: '#3a4548',
     },
     top: {
         flex: 0.38,
@@ -371,7 +284,7 @@ const styles = StyleSheet.create({
         padding: 10,
         alignItems: "stretch",
         justifyContent: "flex-end",
-        backgroundColor: "#E5DEDE",
+        backgroundColor: "#F7F7F7",
     },
     note_section: {
         flex: 5,
@@ -392,6 +305,7 @@ const styles = StyleSheet.create({
         textDecorationColor:'#686868',
         fontFamily: 'Times New Roman',
         textAlign: 'center',
+        color: '#770B16'
     },
     profile_image: {
         flex: 0.55,
@@ -407,12 +321,19 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         padding: 10,
-        marginLeft: 20,
-        marginRight: 20,
+        marginLeft: '5%',
+        marginRight: '5%',
         alignItems: "center",
         backgroundColor: "#FFFFFF",
         justifyContent: "flex-start",
-        borderRadius: 12,
+        borderRadius: 5,
+        shadowColor: '#000111',
+        shadowOffset: {
+          width: 0,
+          height: 1 },
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+        elevation: 1,
     },
     instructions: {
         textAlign: 'center',
@@ -431,47 +352,21 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
     },
     descriptionScroll: {
-      borderWidth: 0.3,
-      borderColor: "#000000",
-      borderRadius: 4,
+      alignSelf: 'center',
+      textAlign: 'center',
       marginTop: 10,
       marginBottom: 5,
-      padding: 10,
-      width: '90%',
+      padding: 5,
       alignSelf: 'center',
     },
     descriptionContainer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         flex: 1,
         marginTop: 5,
         marginBottom: 5,
         paddingHorizontal: 10,
-    },
-    historyContainer: {
-        flexDirection: 'column',
-        padding: 10
-    },
-    historyHeader: {
-        marginLeft: 15,
-        marginBottom: 10,
-        fontWeight: 'bold',
-        fontSize: 15
-    },
-    timelineDetailContainer: {
-      marginBottom: 20,
-      paddingLeft: 5,
-      paddingRight: 5,
-      backgroundColor: "#D3D3D3",
-      borderRadius: 3,
-      shadowColor: '#000111',
-      shadowOffset: {
-        width: 0,
-        height: 1 },
-      shadowOpacity: 0.5,
-      shadowRadius: 2,
-      elevation: 1,
-      marginRight: 10,
-  }
+        justifyContent: 'center'
+    }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GuestProfile);

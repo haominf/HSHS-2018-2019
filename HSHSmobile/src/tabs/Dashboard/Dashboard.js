@@ -3,6 +3,7 @@ import {
     Platform,
     StyleSheet,
     Text,
+    TextInput,
     View,
     FlatList,
     ActivityIndicator,
@@ -13,13 +14,19 @@ import {
     LayoutAnimation,
 } from 'react-native';
 import {List, ListItem, SearchBar} from "react-native-elements";
+import firebase from "firebase";
 import {connect} from 'react-redux';
 import MapView from 'react-native-maps';
 import {getGuests, getInteractions, getActionItems, getCompletedActionItems} from '../../redux/actions.js';
 import ActionItemList_module from '../../modules/ActionItemList_module';
-import {Icon} from 'react-native-elements'
+import Lottery_module from '../../modules/Lottery_module';
+import {Icon} from 'react-native-elements';
 import renderSeperator from "../../modules/UI/renderSeperator";
+import Prompt from 'rn-prompt';
+import dupNavFix from "../../dupNavFix";
+import {getLotteryWinners, enterWinners} from '../../redux/actions.js';
 
+const IonIcon = require('react-native-vector-icons/Ionicons');
 const {UIManager} = NativeModules;
 
 UIManager.setLayoutAnimationEnabledExperimental &&
@@ -30,7 +37,8 @@ function mapStateToProps(state, ownProps) {
         actionItems: state.actionItems,
         guests: state.guests,
         loading: state.loading,
-        interactions: state.interactions
+        interactions: state.interactions,
+        lotteryWinner: state.lotteryWinner,
     };
 }
 
@@ -39,7 +47,7 @@ function mapDispatchToProps(dispatch, ownProps) {
         getGuests: getGuests,
         getInteractions: getInteractions,
         getActionItems: getActionItems,
-        getCompletedActionItems: getCompletedActionItems
+        getCompletedActionItems: getCompletedActionItems,
     };
 }
 
@@ -51,15 +59,57 @@ class Dashboard extends Component {
         this.state = {
             isMapFullScreen: true,
             curLat: 42.371664,
-            curLong: -71.119837
+            curLong: -71.119837,
+            lotteryState: false,
+            lotteryWinner: "",
+            lotteryState: false,
+            promptVisible: false,
         }
     };
 
     onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
+        if (event.type == 'NavBarButtonPress') { // this is the event type for button presses
+            if (event.id == 'logout') { // this is the same id field from the static navigatorButtons definition
+              this.props.navigator.resetTo({
+                  title: 'Login',
+                  screen: 'Login', // unique ID registered with Navigation.registerScreen
+                  // No pass props because new default
+                  passProps: {
+                  }, // Object that will be passed as props to the pushed screen (optional)
 
+                  animated: true, // does the push have transition animation or does it happen immediately (optional)
+                  animationType: 'fade', // ‘fade’ (for both) / ‘slide-horizontal’ (for android) does the push have different transition animation (optional)
+                  backButtonHidden: true, // hide the back button altogether (optional)
+                  navigatorStyle: {
+                      navBarHidden: true,
+                      tabBarHidden: true,
+                      statusBarHidden: true
+                  }, // override the navigator style for the pushed screen (optional)
+                  navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
+              });
+              firebase.auth().signOut()
+                  .then(() => {
+                  })
+                  .catch((error) => {
+                      console.log(error);
+                  });
+            }
+        }
     };
 
     componentDidMount() {
+
+    };
+
+    //TODO: lotteryWinner isn't properly mapped to props fix please
+    componentDidMount() {
+      IonIcon.getImageSource('ios-log-out', 36).then((icon) => {
+          this.props.navigator.setButtons({
+              rightButtons: [
+                  { id: 'logout', icon: icon },
+              ]
+          });
+      });
         this.makeRemoteRequest();
         navigator.geolocation.watchPosition((pos) => {
           this.setState({
@@ -69,6 +119,7 @@ class Dashboard extends Component {
         }, (error) => {
           Alert.alert(error.message);
         }, {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 50});
+
     };
 
     makeRemoteRequest = () => {
@@ -107,6 +158,7 @@ class Dashboard extends Component {
                           key={id}
                           pinColor = {actionItem.color}
                           onPress={()=>{self.setSelectActionItem(id)}}
+                          onDeselect={() => {self.setSelectActionItem(null)}}
                       />
                   )
               })(actionItemId, this)
@@ -116,7 +168,31 @@ class Dashboard extends Component {
     };
 
     setSelectActionItem = (id) => {
-      this.setState({selectedInteraction: id});
+      this.setState({selectedActionItem: id});
+    }
+
+    updateLotteryState = () => {
+      return ;
+    }
+
+    _showLotteryInputDialog() {
+      this.setState({promptVisible: true});
+    }
+
+    _renderSelectedActionItem() {
+      if (this.state.selectedActionItem) {
+        return (
+          <ActionItemList_module
+            style={{flex: 1}}
+            actionItems={this.props.actionItems}
+            guests={this.props.guests}
+            navigator={this.props.navigator}
+            selectedActionItem={this.state.selectedActionItem}
+          />
+        );
+      }
+
+      return null;
     }
 
     // I'm not sure if this is the best way to have logical statements within renders, but it's not the worst way!
@@ -125,17 +201,17 @@ class Dashboard extends Component {
 
             (this.props.loading && <ActivityIndicator animating size="large"/>) ||
 
-
             (!this.props.loading &&
-                <View>
+                <View style={{flex: 1}}>
                 {renderSeperator()}
                     <MapView
                         showsUserLocation={true}
+                        userLocationAnnotationTitle={""}
                         region={{
                             latitude: this.state.curLat,
                             longitude: this.state.curLong,
-                            latitudeDelta: 0.02,
-                            longitudeDelta: 0.01
+                            latitudeDelta: 0.002,
+                            longitudeDelta: 0.005
                         }}
                         style={{
                             height: this.state.isMapFullScreen ? Dimensions.get('window').height * 0.4 : Dimensions.get('window').height,
@@ -174,6 +250,7 @@ class Dashboard extends Component {
                             size={28}
                             underlayColor='transparent'
                             name='my-location'
+                            color='#0579f9'
                             onPress={() => {
                                 navigator.geolocation.getCurrentPosition((pos) => {
                                   this.setState({
@@ -187,48 +264,27 @@ class Dashboard extends Component {
                         />
                     </View>
 
-                    {!this.props.actionItems || this.props.actionItems.length <= 1
-                        ? <ActivityIndicator animating size="large"/>
+                    <View style={{flex: 1}}>
+                      {this._renderSelectedActionItem()}
 
-                        : <ActionItemList_module actionItems={this.props.actionItems}
-                                          guests={this.props.guests}
-                                          dashboard={true}
-                                          selectedInteraction={this.state.selectedInteraction}
-                                          navigator={this.props.navigator}/>
-                    }
+                      <View style={{flex: 1, backgroundColor: '#f7f7f7'}}>
+                        <Lottery_module
+                          style={{flex: 1}}
+                          showDialogCallback={() => {this._showLotteryInputDialog()}}
+                          winners={this.state.lotteryWinner}
+                        />
 
-
-                    {/* Commented out until we figure out lottery number implementation
-                    <View style={{flexDirection: 'column', alignItems: 'center'}}>
-
-                    <Text>
-                        Lottery Status: Number not given out
-                    </Text>
-
-                    <View style={{flexDirection: 'row'}}>
-                        <View style={{width: 50, height: 50, backgroundColor: 'powderblue', borderWidth: 1, borderColor: 'black', alignItems: 'center', justifyContent: 'center'}}><Text>0</Text></View>
-                        <View style={{width: 50, height: 50, backgroundColor: 'powderblue', borderWidth: 1, borderColor: 'black', alignItems: 'center', justifyContent: 'center'}}><Text>0</Text></View>
-                        <View style={{width: 50, height: 50, backgroundColor: 'powderblue', borderWidth: 1, borderColor: 'black', alignItems: 'center', justifyContent: 'center'}}><Text>0</Text></View>
+                        <Prompt
+                          title="Please enter winners"
+                          visible={this.state.promptVisible}
+                          onCancel={ () => this.setState({promptVisible: false}) }
+                          onSubmit={ value => {
+                            enterWinners(value, new Date());
+                            this.setState({promptVisible: false})
+                          }}
+                        />
+                      </View>
                     </View>
-
-                    <View style={{flexDirection: 'row'}}>
-                        <View style={{width: 50, height: 50, backgroundColor: 'powderblue', borderWidth: 1, borderColor: 'black', alignItems: 'center', justifyContent: 'center'}}><Text>0</Text></View>
-                        <View style={{width: 50, height: 50, backgroundColor: 'powderblue', borderWidth: 1, borderColor: 'black', alignItems: 'center', justifyContent: 'center'}}><Text>0</Text></View>
-                        <View style={{width: 50, height: 50, backgroundColor: 'powderblue', borderWidth: 1, borderColor: 'black', alignItems: 'center', justifyContent: 'center'}}><Text>0</Text></View>
-                    </View>
-
-                    <Button
-                        title={"Call on Lottery"}
-                        color="#841584"
-                        accessibilityLabel="Learn more about this purple button"
-                        onPress={() => {
-                            Alert.alert("", "Call on Lottery Button Pressed");
-                        }}
-                    />
-
-
-                </View> */}
-
                 </View>
             )
         );
@@ -237,4 +293,4 @@ class Dashboard extends Component {
 
 const styles = StyleSheet.create({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(dupNavFix(Dashboard));

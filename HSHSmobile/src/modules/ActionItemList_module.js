@@ -11,7 +11,6 @@ import renderLoader from "./UI/renderLoader";
 import dupNavFix from "../dupNavFix";
 import Swipeout from 'react-native-swipeout';
 
-
 const oneDayInSeconds = 86400000;
 
 
@@ -21,7 +20,7 @@ class ActionItemList_module extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchInput: '',
+            searchInput: ''
         };
 
         this.Screen_ActionItem_view = this.Screen_ActionItem_view.bind(this);
@@ -39,7 +38,7 @@ class ActionItemList_module extends Component {
             backButtonHidden: false, // hide the back button altogether (optional)
             navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
             navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
-        })
+        });
     };
 
     formatGuestNames = (guestIds) => {
@@ -61,72 +60,72 @@ class ActionItemList_module extends Component {
 
     render() {
         var actionItems = getActionItems(this.props.actionItems, this.props.guestActionItemIds);
-        if (this.props.showDueSoon) {		// Show only actionItems due in 24 hours
-            let now = Date.now();
-            var dueSoon = [];
 
-            for (let i in actionItems) {
-                for (let j in actionItems[i].shiftDate) {
-                    let timeUntilDue = actionItems[i].shiftDate[j] - now;
-                    if (timeUntilDue > 0 && timeUntilDue < oneDayInSeconds) dueSoon.push(actionItems[i])
-                }
-            }
-            actionItems = dueSoon;
+        if (this.props.selectedActionItem) {
+            return (
+                <View>
+                    <FlatList
+                        data={[this.props.actionItems[this.props.selectedActionItem]]}
+                        renderItem={({item}) => this.renderListItem(item)}
+                        keyExtractor={item => item.actionItemId}
+                        ItemSeparatorComponent={() => {
+                            return (renderSeperator())
+                        }}
+                        scrollEnabled={false}
+                    />
+                    {renderSeperator()}
+                </View>
+            );
         }
 
         return (
             <View style={{flex: 1}}>
-                {!this.props.showDueSoon && !this.props.dashboard &&
-                <SearchBar
+                {!this.props.hideSearch && <SearchBar
                     containerStyle={{backgroundColor: 'transparent'}}
                     lightTheme
-                    round
                     clearIcon={this.state.searchInput !== ''}
                     onChangeText={(str) => {
                         this.setState({searchInput: str.toLowerCase()})
                     }}
                     value={this.state.searchInput}
                     onClearText={() => this.setState({searchInput: ''})}
-                    placeholder='Search'
-                />
-                }
-                <View style={{flex: 1}}>
-                    <FlatList
-                        data={this.props.dashboard
-                            ? (this.props.selectedInteraction ? [this.props.actionItems[this.props.selectedInteraction]] : null)
-                            : getActionItems(actionItems).filter(item => item.title.toLowerCase().includes(this.state.searchInput))}
-                        renderItem={({item}) => this.renderListItem(item)}
-                        keyExtractor={item => item.actionItemId}
-                        ItemSeparatorComponent={() => {
-                            return (renderSeperator())
-                        }}
-                        ListHeaderComponent={this.renderHeader}
-                        refreshing={this.props.refreshing}
-                        onEndReached={this.handleLoadMore}
-                        onEndReachedThreshold={50}
-                    />
-                </View>
+                    placeholder='Search (Ex. Restock closet)'
+                />}
+
+                {(!this.props.actionItems || this.props.actionItems.length <= 1) ?
+                    (<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                        <Text style={{color: '#808080'}}>There are no action items</Text>
+                    </View>) :
+                    (<View style={{flex: 1}}>
+                        <FlatList
+                            data={getActionItems(actionItems).filter(item => item.title.toLowerCase().includes(this.state.searchInput))}
+                            renderItem={({item}) => this.renderListItem(item)}
+                            keyExtractor={item => item.actionItemId}
+                            ItemSeparatorComponent={() => {
+                                return (renderSeperator())
+                            }}
+                            ListHeaderComponent={this.renderHeader}
+                            refreshing={this.props.refreshing}
+                            onEndReached={this.handleLoadMore}
+                            onEndReachedThreshold={50}
+                        />
+                    </View>)}
             </View>
         )
     }
 
-    actionDone = (item) => {
-        // console.log(item);
-        // this.props.markActionItemAsDone(item.id)
-        // console.log(this.props);
-        this.props.doneFunction(item.actionItemId);
-        // console.log(item)
-    };
-
     renderListItem(item) {
-        let swipeoutBtns = [{
-            text: 'Done',
+        let swipeoutBtns = this.props.completed ?
+        [{
+            text: 'To-Do!',
+            backgroundColor: 'green',
+            onPress: () => this.props.doneFunction(item.actionItemId)
+        }] :
+        [{
+            text: 'Done!',
             backgroundColor: 'red',
-            onPress: () => {
-                this.actionDone(item)
-            }
+            onPress: () => this.props.doneFunction(item.actionItemId)
         }];
-
 
         return (
             <Swipeout left={swipeoutBtns}>
@@ -139,33 +138,35 @@ class ActionItemList_module extends Component {
                                 <View style={{flex: 2, flexDirection: 'row'}}>
                                     <View style={{flex: 1}}>
                                         <Icon
-                                            name='people'/>
+                                            color='#3a4548'
+                                            name='people-outline'/>
                                     </View>
                                     <View style={{flex: 3, justifyContent: 'center'}}>
                                         <Text
                                             style={item.guestIds ? {} : {fontStyle: 'italic'}}
                                             numberOfLines={1}>
-                                            {item.guestIds ? this.formatGuestNames(item.guestIds) : "No Tagged Guests"}
+                                            {item.guestIds ? this.formatGuestNames(item.guestIds) : "None"}
                                         </Text>
                                     </View>
                                 </View>
                                 <View style={{flex: 2, flexDirection: 'row'}}>
                                     <View style={{flex: 1}}>
                                         <Icon
+                                            color={item.locationStr === "Shelter" ? "#770B16" : '#3a4548'}
                                             name={'location-on'}/>
                                     </View>
                                     <View style={{flex: 3, justifyContent: 'center'}}>
                                         <Text
-                                            style={item.locationStr ? {} : {fontStyle: 'italic'}}
+                                            style={item.locationStr === "Shelter" ? {color: "#770B16"} : {}}
                                             numberOfLines={1}>
-                                            {item.locationStr ? item.locationStr : "No Tagged Location"}
+                                            {item.locationStr ? item.locationStr : "None"}
                                         </Text>
                                     </View>
                                 </View>
                             </View>
                         } // TODO: fix that without an extra space, the last character is cut off
                         subtitleStyle={{textAlign: 'right'}}
-                        containerStyle={{borderBottomWidth: 0, marginLeft: 10, backgroundColor: "#F5FCFF"}}
+                        containerStyle={{borderBottomWidth: 0, marginLeft: 10, backgroundColor: "white"}}
                         onPress={() => this.Screen_ActionItem_view(item)}
                     />
                 </View>
