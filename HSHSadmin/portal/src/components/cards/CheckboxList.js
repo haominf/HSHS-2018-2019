@@ -24,10 +24,45 @@ class CheckboxList extends React.Component {
       this.state = { checked: [0] };
     }
 
-  handleToggle = value => () => {
+  handleToggle = (key, value) => () => {
     const { checked } = this.state;
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
+    console.log(value.isDone);
+
+    if (value.isDone) {
+        var newData = {
+                color: value.color,
+                creationTimestamp: value.creationTimestamp,
+                description: value.description,
+                guestIds: value.guestIds,
+                isDone: false,
+                locationCoord: value.locationCoord,
+                locationStr: value.locationStr,
+                shiftDate: value.shiftDate,
+                title: value.title,
+                volunteerId: value.volunteerId
+        };
+        var update = {};
+        update['/actionItems/' + key] = newData;
+        firebase.database().ref().update(update);
+    } else {
+        var newData = {
+                color: value.color,
+                creationTimestamp: value.creationTimestamp,
+                description: value.description,
+                guestIds: value.guestIds,
+                isDone: true,
+                locationCoord: value.locationCoord,
+                locationStr: value.locationStr,
+                shiftDate: value.shiftDate,
+                title: value.title,
+                volunteerId: value.volunteerId
+        };
+        var update = {};
+        update['/actionItems/' + key] = newData;
+        firebase.database().ref().update(update);
+    }
 
     if (currentIndex === -1) {
       newChecked.push(value);
@@ -61,16 +96,15 @@ class CheckboxList extends React.Component {
               role={undefined}
               dense
               button
-              onClick={this.handleToggle(value)}
+              onClick={this.handleToggle(key_array[value_array.indexOf(value)], value)}
               className={classes.listItem}
             >
               <Checkbox
-                checked={this.state.checked.indexOf(value) !== -1}
+                checked={value.isDone}
                 tabIndex={-1}
                 disableRipple
               />
-              <ListItemText primary={`${value.title}`} />
-              <ListItemText secondary={`${value.description}`} />
+              <ListItemText primary={`${value.title}`} secondary={`${value.description}`} />
             </ListItem>
           ))}
         </List>

@@ -20,23 +20,11 @@ class SimpleList extends React.Component {
 
     constructor(props) {
       super(props);
-      this.state = { checked: [0] };
     }
 
-  handleToggle = value => () => {
-    const { checked } = this.state;
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    this.setState({
-      checked: newChecked,
-    });
+  handleToggle = (key, value) => () => {
+      const message = value.title + "\n" + value.description;
+      alert(message);
   };
 
   render() {
@@ -60,10 +48,10 @@ class SimpleList extends React.Component {
               role={undefined}
               dense
               button
+              onClick={this.handleToggle(key_array[value_array.indexOf(value)], value)}
               className={classes.listItem}
             >
-              <ListItemText primary={`${value.title}`} />
-              <ListItemText secondary={`${value.description}`} />
+              <ListItemText primary={`${value.title}`} secondary={`${value.description}`} />
             </ListItem>
           ))}
         </List>
