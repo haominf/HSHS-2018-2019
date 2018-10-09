@@ -8,6 +8,9 @@ import {UserManagementCard} from './cards/UserManagementCard'
 import {DataExportCard} from './cards/DataExportCard'
 import {GetUserTagsCard} from './cards/GetUserTagsCard'
 import {CreateAccountCard} from './cards/CreateAccountCard'
+import {CheckListCard} from './cards/CheckListCard'
+import {ListCard} from './cards/ListCard'
+import AlertDialog from './cards/AlertDialog'
 
 class PanelPage extends Component {
     constructor(props) {
@@ -30,18 +33,19 @@ class PanelPage extends Component {
               margin: "auto",
               flexWrap: "wrap",
               }}>
-                <SignupKeyCard
-                  label = "Admin Signup Key"
-                  keyRef = {firebase.database().ref("/signUpKeys/adminKey")}
+                <CheckListCard
+                  label = "Action Items"
+                  dataRef = {firebase.database().ref("/actionItems")}
                   style = {{flex: 1, margin: 10}}/>
-                <SignupKeyCard
-                  label = "User Signup Key"
-                  keyRef = {firebase.database().ref("/signUpKeys/userKey")}
+                <ListCard
+                  label = "Completed Action Items"
+                  dataRef = {firebase.database().ref("/completedActionItems")}
                   style = {{flex: 1, margin: 10}}/>
-                <CreateAccountCard style = {{flex: 1, margin: 10}}/>
-                <GetUserTagsCard style = {{flex: 1, margin: 10}}/>
-                <DataExportCard style = {{flex: 1, margin: 10}}/>
-                <UserManagementCard style = {{flex: 1, margin: 10}}/>
+              <ListCard
+                label = "Interactions"
+                dataRef = {firebase.database().ref("/interactions")}
+                style = {{flex: 1, margin: 10}}/>
+            <AlertDialog />
             </div>
         );
     }
@@ -53,3 +57,20 @@ class PanelPage extends Component {
 }
 
 export default withRouter(PanelPage);
+
+/*
+
+<SignupKeyCard
+  label = "Admin Signup Key"
+  keyRef = {firebase.database().ref("/signUpKeys/adminKey")}
+  style = {{flex: 1, margin: 10}}/>
+<SignupKeyCard
+  label = "User Signup Key"
+  keyRef = {firebase.database().ref("/signUpKeys/userKey")}
+  style = {{flex: 1, margin: 10}}/>
+<CreateAccountCard style = {{flex: 1, margin: 10}}/>
+<GetUserTagsCard style = {{flex: 1, margin: 10}}/>
+<DataExportCard style = {{flex: 1, margin: 10}}/>
+<UserManagementCard style = {{flex: 1, margin: 10}}/>
+
+*/
