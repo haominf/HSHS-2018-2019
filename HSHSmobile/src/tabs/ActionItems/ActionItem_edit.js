@@ -69,7 +69,7 @@ class ActionItem_edit extends Component {
             },
             selectedIndex: this.props.locationCoord ? 1 : 0,
             locationStr: this.props.locationStr ? this.props.locationStr : "Shelter",
-            selectedDate: this.props.selectedDate ? this.props.selectedDate : Moment().format('YYYY-MM-DD'),
+            selectedDate: this.props.selectedDate ? this.props.selectedDate : Moment().format('YYYY/MM/DD'),
             description: this.props.description ? this.props.description : "",
             color: this.props.color ? this.props.color : null,
             creationTimestamp: this.props.creationTimestamp ? this.props.creationTimestamp : Moment().format()
