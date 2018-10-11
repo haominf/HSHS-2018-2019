@@ -7,6 +7,12 @@ import List, {ListItem, ListItemSecondaryAction, ListItemText} from 'material-ui
 import Button from 'material-ui/Button';
 import * as firebase from 'firebase';
 
+import Dialog from 'material-ui/Dialog';
+import DialogActions from 'material-ui/Dialog';
+import DialogContent from 'material-ui/Dialog';
+import DialogContentText from 'material-ui/Dialog';
+import DialogTitle from 'material-ui/Dialog';
+
 
 const styles = theme => ({
   root: {
@@ -22,13 +28,17 @@ class SimpleList extends React.Component {
       super(props);
     }
 
+    state = {
+      open: false,
+    };
+
   handleToggle = (key, value) => () => {
       const message = value.title + "\n" + value.description;
       alert(message);
   };
 
   render() {
-
+    const hasTitle = this.props.hasTitle;
     const listContent = this.props.listContent;
     var key_array = [];
     var value_array = [];
@@ -39,24 +49,47 @@ class SimpleList extends React.Component {
 
     const { classes } = this.props;
 
-    return (
-      <div className={classes.root}>
-        <List>
-          {value_array.map(value => (
-            <ListItem
-              key={key_array[value_array.indexOf(value)]}
-              role={undefined}
-              dense
-              button
-              onClick={this.handleToggle(key_array[value_array.indexOf(value)], value)}
-              className={classes.listItem}
-            >
-              <ListItemText primary={`${value.title}`} secondary={`${value.description}`} />
-            </ListItem>
-          ))}
-        </List>
-      </div>
-    );
+    if (hasTitle) {
+        console.log(this.state.open);
+        return (
+          <div className={classes.root}>
+            <List>
+              {value_array.map(value => (
+                <ListItem
+                  key={key_array[value_array.indexOf(value)]}
+                  role={undefined}
+                  dense
+                  button
+                  onClick={this.handleToggle}
+                  className={classes.listItem}
+                >
+                  <ListItemText primary={`${value.title}`} secondary={`${value.description}`} />
+                </ListItem>
+              ))}
+            </List>
+          </div>
+        );
+    } else {
+        return (
+          <div className={classes.root}>
+            <List>
+              {value_array.map(value => (
+                <ListItem
+                  key={key_array[value_array.indexOf(value)]}
+                  role={undefined}
+                  dense
+                  button
+                  onClick={this.handleToggle(key_array[value_array.indexOf(value)], value)}
+                  className={classes.listItem}
+                >
+                  <ListItemText primary={`${value.description}`} />
+                </ListItem>
+              ))}
+            </List>
+          </div>
+        );
+    }
+
   }
 }
 
