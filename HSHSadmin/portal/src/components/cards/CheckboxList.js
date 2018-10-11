@@ -21,15 +21,9 @@ class CheckboxList extends React.Component {
 
     constructor(props) {
       super(props);
-      this.state = { checked: [0] };
     }
 
   handleToggle = (key, value) => () => {
-    const { checked } = this.state;
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-    console.log(value.isDone);
-
     if (value.isDone) {
         var newData = {
                 color: value.color,
@@ -63,20 +57,9 @@ class CheckboxList extends React.Component {
         update['/actionItems/' + key] = newData;
         firebase.database().ref().update(update);
     }
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    this.setState({
-      checked: newChecked,
-    });
   };
 
   render() {
-
     const listContent = this.props.listContent;
     var key_array = [];
     var value_array = [];

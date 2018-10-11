@@ -30,7 +30,7 @@ class ListCard extends Component {
   }
 
   render() {
-      
+
     const { classes } = this.props;
 
     return(
@@ -39,7 +39,7 @@ class ListCard extends Component {
             <Typography variant="title" gutterBottom>
               {this.props.label}
             </Typography>
-            <SimpleList listContent = {this.state.listContent}/>
+            <SimpleList listContent = {this.state.listContent} hasTitle = {this.props.hasTitle}/>
         </CardContent>
       </Card>
     );

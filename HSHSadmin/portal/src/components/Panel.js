@@ -40,10 +40,12 @@ class PanelPage extends Component {
                 <ListCard
                   label = "Completed Action Items"
                   dataRef = {firebase.database().ref("/completedActionItems")}
+                  hasTitle = {true}
                   style = {{flex: 1, margin: 10}}/>
               <ListCard
                 label = "Interactions"
                 dataRef = {firebase.database().ref("/interactions")}
+                hasTitle = {false}
                 style = {{flex: 1, margin: 10}}/>
             <AlertDialog />
             </div>
