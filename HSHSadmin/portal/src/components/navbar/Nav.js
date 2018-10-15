@@ -14,8 +14,8 @@ import DateIcon from "@material-ui/icons/DateRange";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import { withStyles } from "@material-ui/core/styles";
-
-import { navActionItems, navAccountItems } from "./listData";
+import { navActionItems, navAccountItems } from "./NavItems";
+import logo from "./logo.png";
 
 const drawerWidth = 240;
 const styles = theme => ({
@@ -68,17 +68,25 @@ class Nav extends Component {
 					}}
 				>
 					<div className={styles.toolbar} />
-					<List style={{ marginTop: 200 }}>{navActionItems}</List>
+					<div style={{ textAlign: "center" }}>
+						<h3 style={{ marginBottom: 10, color: "#2d2d2d" }}>
+							Harvard Square
+						</h3>
+						<h4 style={{ marginTop: 0, color: "#2d2d2d" }}>Homeless Shelter</h4>
+						<img height="160" width="160" src={logo} />
+					</div>
+					<Divider style={{ marginTop: 20 }} />
+					<List>{navActionItems}</List>
 					<Divider />
 					<List>{navAccountItems}</List>
 				</Drawer>
 
-				<main className={styles.content}>
+				{/* <main className={styles.content}>
 					<div className={styles.toolbar} />
 					<Typography variant="body2" noWrap>
 						{"You think water moves fast? You should see ice."}
 					</Typography>
-				</main>
+				</main> */}
 			</div>
 		);
 	}

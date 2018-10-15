@@ -2,17 +2,12 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import * as firebase from "firebase";
-import * as routes from "../constants/routes";
 import { Nav } from "./navbar/Nav";
 
-class DashboardPage extends Component {
+class VolunteersPage extends Component {
 	constructor(props) {
 		super(props);
 		let self = this;
-		// if (!firebase.auth().currentUser) {
-		// 	props.history.push(routes.SIGN_IN);
-		// }
 	}
 
 	render() {
@@ -33,15 +28,15 @@ class DashboardPage extends Component {
 				<div>
 					<Nav />
 					<main>
-						<h1>THIS IS DASHBOARD PAGE</h1>
+						<h1>THIS IS VOLUNTEER PAGE</h1>
 						<Button
-							color={"primary"}
+							color={"secondary"}
 							size={"large"}
 							full-width={"true"}
-							href={"/volunteers"}
+							href={"/dashboard"}
 							variant={"outlined"}
 						>
-							Go to volunteers
+							Back to Dashboard
 						</Button>
 					</main>
 				</div>
@@ -54,4 +49,4 @@ class DashboardPage extends Component {
 	// }
 }
 
-export default withRouter(DashboardPage);
+export default withRouter(VolunteersPage);

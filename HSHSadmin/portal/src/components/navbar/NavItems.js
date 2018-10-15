@@ -6,18 +6,29 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import GroupIcon from "@material-ui/icons/Group";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
 import DateIcon from "@material-ui/icons/DateRange";
+import HomeIcon from "@material-ui/icons/Home";
+import ReportsIcon from "@material-ui/icons/Description";
+import RecentActorsIcon from "@material-ui/icons/RecentActors";
+import AdminIcon from "@material-ui/icons/PermIdentity";
+import PhoneIcon from "@material-ui/icons/Phone";
 
 export const navActionItems = (
 	<div>
 		<ListItem button href="#">
 			<ListItemIcon>
-				<GroupIcon />
+				<HomeIcon />
+			</ListItemIcon>
+			<ListItemText primary="Dashboard" />
+		</ListItem>
+		<ListItem button href="/volunteers">
+			<ListItemIcon>
+				<RecentActorsIcon />
 			</ListItemIcon>
 			<ListItemText primary="Volunteers" />
 		</ListItem>
 		<ListItem button href="#">
 			<ListItemIcon>
-				<DateIcon />
+				<GroupIcon />
 			</ListItemIcon>
 			<ListItemText primary="Guests" />
 		</ListItem>
@@ -29,13 +40,13 @@ export const navActionItems = (
 		</ListItem>
 		<ListItem button href="#">
 			<ListItemIcon>
-				<SettingsIcon />
+				<AdminIcon />
 			</ListItemIcon>
 			<ListItemText primary="Admin" />
 		</ListItem>
 		<ListItem button href="#">
 			<ListItemIcon>
-				<SettingsIcon />
+				<ReportsIcon />
 			</ListItemIcon>
 			<ListItemText primary="Reports" />
 		</ListItem>
@@ -46,7 +57,7 @@ export const navAccountItems = (
 	<div>
 		<ListItem button href="#">
 			<ListItemIcon>
-				<SettingsIcon />
+				<PhoneIcon />
 			</ListItemIcon>
 			<ListItemText primary="Contact" />
 		</ListItem>

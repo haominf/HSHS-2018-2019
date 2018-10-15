@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import SignInPage from "./SignIn";
 import PanelPage from "./Panel";
 import DashboardPage from "./Dashboard";
+import VolunteersPage from "./Volunteers";
 
 import * as routes from "../constants/routes";
 
@@ -16,6 +17,11 @@ const App = () => (
 				exact
 				path={routes.DASHBOARD}
 				component={() => <DashboardPage />}
+			/>
+			<Route
+				exact
+				path={routes.VOLUNTEERS}
+				component={() => <VolunteersPage />}
 			/>
 		</div>
 	</Router>
