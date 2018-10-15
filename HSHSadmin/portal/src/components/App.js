@@ -6,6 +6,7 @@ import {
 
 import SignInPage from './SignIn';
 import PanelPage from './Panel';
+import InteractionsPage from './Interactions';
 
 import * as routes from '../constants/routes';
 
@@ -13,7 +14,7 @@ const App = () =>
     <Router>
         <div style= {{height: "100%", width: "100%"}}>
             <Route exact path={routes.SIGN_IN} component={() => <SignInPage />} />
-            <Route exact path={routes.PANEL} component={() => <PanelPage />} />
+            <Route exact path={routes.PANEL } component={() => <InteractionsPage />} />
         </div>
     </Router>
 
