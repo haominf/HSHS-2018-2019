@@ -1,10 +1,24 @@
 # Harvard Square Homeless Shelter
-2017 Fall Jumbocode Project
+2018 Fall Jumbocode Project
 
 ## Project Description
 Harvard Square Homeless Shelter has a Street Team (ST) that goes out to the streets of Cambridge and provide assistance to those in need who cannot make it to the shelter. A comprehensive history of all interactions need to be documented and consolidated. Currently, the ST data and notes system is fairly inefficient. The ST members take binders of resources and notepads out on the streets, and the notes are compiled at the end of the night. The app that we are building will streamline this process, and enable individual ST members to easily record and access information on any guest they have interacted with.
 
-## Team Members
+## Current Team Members (Fall 2018 - Spring 2019)
+***Project Lead***:  <br />
+Philip Wang  <br />
+***Members:***  <br />
+Min Feng <br />
+Matt Manfre <br />
+Betty Chen  <br />
+Belen Farias  <br />
+Greg Pickart <br />
+Henry Li <br />
+Linda Cameron <br />
+Jack Zerilli
+
+
+## Previous Team Members (Fall 2017 - Spring 2018)
 ***Project Lead***:  <br />
 Tommy Tang  <br />
 ***Members:***  <br />
@@ -34,6 +48,13 @@ We chose to use react-native for frontend and firebase for backend
 3. npm install
 
 4. react-native run-ios / react-native run-android
+
+## How to run web app:
+1. cd HSHSadmin/portal
+
+2. npm start
+
+## Note: the current master is v0
 
 ## How to create a new account:
 1. Login to firebase
