@@ -11,45 +11,43 @@ import ReportsIcon from "@material-ui/icons/Description";
 import RecentActorsIcon from "@material-ui/icons/RecentActors";
 import AdminIcon from "@material-ui/icons/PermIdentity";
 import PhoneIcon from "@material-ui/icons/Phone";
+import * as routes from '../../constants/routes';
+import { withRouter } from 'react-router-dom';
+import MemoryRouter from 'react-router/MemoryRouter';
+import Route from 'react-router/Route';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import NoSsr from '@material-ui/core/NoSsr';
+
+class ListItemLink1 extends React.Component {
+  renderLink = itemProps => <Link to={this.props.to} {...itemProps} />;
+
+  render() {
+    const { icon, primary } = this.props;
+    return (
+      <li>
+        <ListItem button component={this.renderLink}>
+          <ListItemIcon>{icon}</ListItemIcon>
+          <ListItemText primary={primary} />
+        </ListItem>
+      </li>
+    );
+  }
+}
+
+ListItemLink1.propTypes = {
+  icon: PropTypes.node.isRequired,
+  primary: PropTypes.node.isRequired,
+  to: PropTypes.string.isRequired,
+};
 
 export const navActionItems = (
 	<div>
-		<ListItem button href="#">
-			<ListItemIcon>
-				<HomeIcon />
-			</ListItemIcon>
-			<ListItemText primary="Dashboard" />
-		</ListItem>
-		<ListItem button href="/volunteers">
-			<ListItemIcon>
-				<RecentActorsIcon />
-			</ListItemIcon>
-			<ListItemText primary="Volunteers" />
-		</ListItem>
-		<ListItem button href="#">
-			<ListItemIcon>
-				<GroupIcon />
-			</ListItemIcon>
-			<ListItemText primary="Guests" />
-		</ListItem>
-		<ListItem button href="#">
-			<ListItemIcon>
-				<DateIcon />
-			</ListItemIcon>
-			<ListItemText primary="Interactions" />
-		</ListItem>
-		<ListItem button href="#">
-			<ListItemIcon>
-				<AdminIcon />
-			</ListItemIcon>
-			<ListItemText primary="Admin" />
-		</ListItem>
-		<ListItem button href="#">
-			<ListItemIcon>
-				<ReportsIcon />
-			</ListItemIcon>
-			<ListItemText primary="Reports" />
-		</ListItem>
+        <ListItemLink1 to="/volunteers" primary="Volunteers" icon={<RecentActorsIcon />} />
+        <ListItemLink1 to="/guests" primary="Guests" icon={<GroupIcon />} />
+        <ListItemLink1 to="interactions" primary="Interactions" icon={<DateIcon />} />
+        <ListItemLink1 to="/admin" primary="Admin" icon={<AdminIcon />} />
+        <ListItemLink1 to="/reports" primary="Reports" icon={<ReportsIcon />} />
 	</div>
 );
 
@@ -75,3 +73,6 @@ export const navAccountItems = (
 		</ListItem>
 	</div>
 );
+
+// export default withRouter(navActionItems);
+// export {navAccountItems};

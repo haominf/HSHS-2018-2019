@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
-import Card, {CardContent, CardActions} from 'material-ui/Card';
-import List, {ListItem, ListItemSecondaryAction, ListItemText} from 'material-ui/List';
-import Checkbox from 'material-ui/Checkbox';
-import Button from 'material-ui/Button';
+import Card, {CardContent, CardActions} from '@material-ui/core/Card';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
 import CheckboxList from './CheckboxList';
-import Typography from 'material-ui/Typography';
+import Typography from '@material-ui/core/Typography';
 
 class CheckListCard extends Component {
   constructor(props) {
