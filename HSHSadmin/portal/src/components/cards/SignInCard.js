@@ -8,30 +8,25 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 
 const byPropKey = (propertyName, value) => () => ({
-  [propertyName]: value,
+	[propertyName]: value
 });
 
 const INITIAL_STATE = {
-  email: '',
-  password: '',
-  error: null
-}
+	email: "",
+	password: "",
+	error: null
+};
 
 class SignInCard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {...INITIAL_STATE};
-  }
+	constructor(props) {
+		super(props);
+		this.state = { ...INITIAL_STATE };
+	}
 
-  submit = (event) => {
-    const {
-      email,
-      password,
-    } = this.state;
+	submit = event => {
+		const { email, password } = this.state;
 
-    const {
-      history,
-    } = this.props;
+		const { history } = this.props;
 
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
     .then(() => {
@@ -45,7 +40,7 @@ class SignInCard extends Component {
             // Show admin UI.
             console.log("isadmin");
             this.setState(() => ({...INITIAL_STATE}));
-            history.push(routes.PANEL);
+            history.push(routes.DASHBOARD);
             //showAdminUI();
           } else {
             // Show regular user UI.
@@ -61,14 +56,11 @@ class SignInCard extends Component {
       console.error(error);
     });
 
-    event.preventDefault();
-  }
+		event.preventDefault();
+	};
 
-  render() {
-    const {
-      email,
-      password,
-    } = this.state;
+	render() {
+		const { email, password } = this.state;
 
     return (
         <Card style = {this.props.style}>
@@ -109,11 +101,10 @@ class SignInCard extends Component {
     );
   }
 
-  componentWillUnmount() {
-      if (this.statePromises)
-          this.statePromises.forEach(p => p.cancel());
-  }
+	componentWillUnmount() {
+		if (this.statePromises) this.statePromises.forEach(p => p.cancel());
+	}
 }
 
 export default SignInCard;
-export {SignInCard};
+export { SignInCard };
