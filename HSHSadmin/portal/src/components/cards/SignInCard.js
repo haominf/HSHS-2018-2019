@@ -2,56 +2,65 @@ import React, {Component} from 'react';
 import * as firebase from 'firebase';
 import {auth} from '../../firebase';
 import * as routes from '../../constants/routes';
-import TextField from 'material-ui/TextField';
-import Card, { CardContent } from 'material-ui/Card';
-import Button from 'material-ui/Button';
+import TextField from '@material-ui/core/TextField';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
 
 const byPropKey = (propertyName, value) => () => ({
-  [propertyName]: value,
+	[propertyName]: value
 });
 
 const INITIAL_STATE = {
-  email: '',
-  password: '',
-  error: null
-}
+	email: "",
+	password: "",
+	error: null
+};
 
 class SignInCard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {...INITIAL_STATE};
-  }
+	constructor(props) {
+		super(props);
+		this.state = { ...INITIAL_STATE };
+	}
 
-  submit = (event) => {
-    const {
-      email,
-      password,
-    } = this.state;
+	submit = event => {
+		const { email, password } = this.state;
 
-    const {
-      history,
-    } = this.props;
+		const { history } = this.props;
 
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
     .then(() => {
         return firebase.auth().signInWithEmailAndPassword(email, password);
+    })
+    .then(() => {
+      firebase.auth().currentUser.getIdTokenResult()
+      .then((idTokenResult) => {
+          // Confirm the user is an Admin.
+          if (!!idTokenResult.claims.admin) {
+            // Show admin UI.
+            console.log("isadmin");
+            this.setState(() => ({...INITIAL_STATE}));
+            history.push(routes.DASHBOARD);
+            //showAdminUI();
+          } else {
+            // Show regular user UI.
+            console.log("isuser");
+            //showRegularUI();
+          }
       })
-      .then(() => {
-        this.setState(() => ({...INITIAL_STATE}));
-        history.push(routes.PANEL);
-      })
-      .catch(error => {
-        this.setState(byPropKey('error', error));
+      .catch((error) => {
+        console.error(error);
       });
+    })
+    .catch(error => {
+      console.error(error);
+    });
 
-    event.preventDefault();
-  }
+		event.preventDefault();
+	};
 
-  render() {
-    const {
-      email,
-      password,
-    } = this.state;
+	render() {
+		const { email, password } = this.state;
 
     return (
         <Card style = {this.props.style}>
@@ -82,7 +91,7 @@ class SignInCard extends Component {
                 <Button
                     label="SignIn"
                     type="submit"
-                    variant="raised"
+                    variant="contained"
                     color="secondary">
                 Sign In
                 </Button>
@@ -92,11 +101,10 @@ class SignInCard extends Component {
     );
   }
 
-  componentWillUnmount() {
-      if (this.statePromises)
-          this.statePromises.forEach(p => p.cancel());
-  }
+	componentWillUnmount() {
+		if (this.statePromises) this.statePromises.forEach(p => p.cancel());
+	}
 }
 
 export default SignInCard;
-export {SignInCard};
+export { SignInCard };

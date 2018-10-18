@@ -66,4 +66,3 @@ We chose to use react-native for frontend and firebase for backend
 ## React Native Installation
 Click the link below, and follow the instructions within "Building Projects with Native Code" <br />
 https://facebook.github.io/react-native/docs/getting-started.html
-

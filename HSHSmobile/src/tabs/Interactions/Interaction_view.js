@@ -219,7 +219,7 @@ class Interaction_view extends Component {
                                     date={this.state.date}
                                     mode="date"
                                     placeholder="select date"
-                                    format="YYYY-MM-DD"
+                                    format="YYYY/MM/DD"
                                     confirmBtnText="Confirm"
                                     cancelBtnText="Cancel"
                                     hideText
