@@ -71,10 +71,13 @@ class SignInCard extends Component {
       <Card
         style={{
           backgroundColor: "transparent",
+          shadowColor: "transparent",
           width: "25%",
           height: "30%",
           outline: "none",
-          border: "none"
+          border: "none",
+          borderRadius: 0,
+          boxShadow: "none"
         }}
       >
         <CardContent>

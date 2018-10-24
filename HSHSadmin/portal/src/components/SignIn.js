@@ -15,8 +15,6 @@ const SignInPage = ({ history }) => (
       margin: "auto",
       backgroundImage: `url(${Background})`,
       backgroundSize: "cover"
-      //"url(" + { Background } + ")"
-      //margin: '10% auto',
     }}
   >
     <div>
