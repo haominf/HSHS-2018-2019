@@ -36,21 +36,26 @@ class SimpleList extends React.Component {
       let self = this;
       let dataRef = this.props.dataRef;
       dataRef.on('value', (snapshot) => {
-          var newContent = {};
           snapshot.forEach((childSnapshot) => {
+            var newContent = this.state.listContent;
             var childKey = childSnapshot.key;
             var childData = childSnapshot.val();
-            newContent[childKey] = childData;
+            firebase.database().ref("/guests/" + childData.guestIds[0]).once('value').then(function(guest_snapshot) {
+                var guest = guest_snapshot.val();
+                newContent[childKey] = {interaction: childData, guest: guest};
+                self.setState({
+                  listContent: newContent
+                });
+            });
           });
-          console.log(newContent);
-        self.setState({
-          listContent: newContent
-        });
       });
     }
 
   handleToggle = (key, value) => () => {
-      const message = value.title + "\n" + value.description;
+      const message = "Description: " + value.interaction.description
+                    + "\nCreated on: " + value.interaction.creationTimestamp
+                    + "\nLocation: " + value.interaction.locationStr
+                    + "\nGuest: " + value.guest.name;
       alert(message);
   };
 
@@ -59,13 +64,13 @@ class SimpleList extends React.Component {
     const listContent = this.state.listContent;
     var key_array = [];
     var value_array = [];
+    var guest_array = [];
     for (var key in listContent) {
         key_array.push(key);
         value_array.push(listContent[key]);
     }
 
     if (hasTitle) {
-        console.log(this.state.open);
         return (
           <div>
             <List>
@@ -77,7 +82,11 @@ class SimpleList extends React.Component {
                   button
                   onClick={this.handleToggle}
                 >
-                  <ListItemText primary={`${value.title}`} secondary={`${value.description}`} />
+                  <ListItemText primary={`${value.interaction.title}`}/>
+                  <ListItemText primary={`${value.interaction.description}`} />
+                  <ListItemText primary={`${value.interaction.creationTimestamp}`} />
+                  <ListItemText primary={`${value.interaction.locationStr}`} />
+                  <ListItemText primary={`${value.guest.name}`} />
                 </ListItem>
               ))}
             </List>
@@ -89,7 +98,6 @@ class SimpleList extends React.Component {
               backgroundColor: "#fff",
               height: "100%",
               width: "100vw",
-              paddingTop: "400px",
               flexDirection: "row",
               display: "flex",
               alignItems: "left",
@@ -106,7 +114,10 @@ class SimpleList extends React.Component {
                   button
                   onClick={this.handleToggle(key_array[value_array.indexOf(value)], value)}
                 >
-                  <ListItemText primary={`${value.description}`} />
+                  <ListItemText primary={`${value.interaction.description}`} />
+                  <ListItemText primary={`${value.interaction.creationTimestamp}`} />
+                  <ListItemText primary={`${value.interaction.locationStr}`} />
+                  <ListItemText primary={`${value.guest.name}`} />
                 </ListItem>
               ))}
             </List>
