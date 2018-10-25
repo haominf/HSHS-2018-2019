@@ -3,6 +3,33 @@ import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { Nav } from "./navbar/Nav";
+import RecentActorsIcon from "@material-ui/icons/RecentActors";
+
+const drawerWidth = 240;
+const styles = theme => ({
+	root: {
+		flexGrow: 1,
+		height: 440,
+		zIndex: 1,
+		overflow: "hidden",
+		position: "relative",
+		display: "flex"
+	},
+	appBar: {
+		zIndex: theme.zIndex.drawer + 1
+	},
+	drawerPaper: {
+		position: "relative",
+		width: drawerWidth
+	},
+	content: {
+		flexGrow: 1,
+		backgroundColor: theme.palette.background.default,
+		padding: theme.spacing.unit * 3,
+		minWidth: 0 // So the Typography noWrap works
+	},
+	toolbar: theme.mixins.toolbar
+});
 
 class GuestsPage extends Component {
 	constructor(props) {
