@@ -2,17 +2,12 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import * as firebase from "firebase";
-import * as routes from "../constants/routes";
 import { Nav } from "./navbar/Nav";
 
-class DashboardPage extends Component {
+class GuestsPage extends Component {
 	constructor(props) {
 		super(props);
 		let self = this;
-		// if (!firebase.auth().currentUser) {
-		// 	props.history.push(routes.SIGN_IN);
-		// }
 	}
 
 	render() {
@@ -33,8 +28,16 @@ class DashboardPage extends Component {
 				<div>
 					<Nav />
 					<main>
-						<h1>THIS IS DASHBOARD PAGE</h1>
-						
+						<h1>THIS IS GUEST PAGE</h1>
+						<Button
+							color={"secondary"}
+							size={"large"}
+							full-width={"true"}
+							href={"/dashboard"}
+							variant={"outlined"}
+						>
+							Back to Dashboard
+						</Button>
 					</main>
 				</div>
 			</div>
@@ -46,4 +49,4 @@ class DashboardPage extends Component {
 	// }
 }
 
-export default withRouter(DashboardPage);
+export default withRouter(GuestsPage);

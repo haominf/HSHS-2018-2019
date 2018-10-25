@@ -14,37 +14,37 @@ import PhoneIcon from "@material-ui/icons/Phone";
 
 export const navActionItems = (
 	<div>
-		<ListItem button href="#">
+		<ListItem button component="a" href="/dashboard">
 			<ListItemIcon>
 				<HomeIcon />
 			</ListItemIcon>
 			<ListItemText primary="Dashboard" />
 		</ListItem>
-		<ListItem button href="/volunteers">
+		<ListItem button component="a" href="/volunteers">
 			<ListItemIcon>
 				<RecentActorsIcon />
 			</ListItemIcon>
 			<ListItemText primary="Volunteers" />
 		</ListItem>
-		<ListItem button href="#">
+		<ListItem button component="a" href="/guests">
 			<ListItemIcon>
 				<GroupIcon />
 			</ListItemIcon>
 			<ListItemText primary="Guests" />
 		</ListItem>
-		<ListItem button href="#">
+		<ListItem button component="a" href="/interactions">
 			<ListItemIcon>
 				<DateIcon />
 			</ListItemIcon>
 			<ListItemText primary="Interactions" />
 		</ListItem>
-		<ListItem button href="#">
+		<ListItem button component="a" href="/admin">
 			<ListItemIcon>
 				<AdminIcon />
 			</ListItemIcon>
 			<ListItemText primary="Admin" />
 		</ListItem>
-		<ListItem button href="#">
+		<ListItem button component="a" href="/reports">
 			<ListItemIcon>
 				<ReportsIcon />
 			</ListItemIcon>
