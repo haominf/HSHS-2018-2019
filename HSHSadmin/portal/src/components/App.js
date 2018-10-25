@@ -5,6 +5,7 @@ import SignInPage from "./SignIn";
 import PanelPage from "./Panel";
 import DashboardPage from "./Dashboard";
 import VolunteersPage from "./Volunteers";
+import AdminPage from "./Admin";
 import InteractionsPage from "./Interactions";
 
 import * as routes from "../constants/routes";
@@ -24,6 +25,11 @@ const App = () => (
 				path={routes.VOLUNTEERS}
 				component={() => <VolunteersPage />}
 			/>
+            <Route
+                exact
+                path={routes.ADMIN}
+                component={() => <AdminPage />}
+            />
             <Route
                 exact
                 path={routes.INTERACTIONS}
