@@ -25,7 +25,7 @@ class InteractionsPage extends Component {
 		return (
 			<div
 				style={{
-					backgroundColor: "#dce0e2",
+					backgroundColor: "#fff",
 					height: "100%",
 					width: "100%",
 					flexDirection: "row",

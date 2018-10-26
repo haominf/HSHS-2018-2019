@@ -19,7 +19,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 const styles = theme => ({
   root: {
     width: '100%',
-    height: '50%',
+    height: '100%',
     maxWidth: 360,
     backgroundColor: 'white',
   },
@@ -86,11 +86,7 @@ class SimpleList extends React.Component {
                   button
                   onClick={this.handleToggle}
                 >
-                  <ListItemText primary={`${value.interaction.title}`}/>
-                  <ListItemText primary={`${value.interaction.description}`} />
-                  <ListItemText primary={`${value.interaction.creationTimestamp}`} />
-                  <ListItemText primary={`${value.interaction.locationStr}`} />
-                  <ListItemText primary={`${value.guest.name}`} />
+                  <ListItemText primary={`${value.interaction.title}`} secondary={`${value.interaction.description} | ${value.interaction.creationTimestamp} | ${value.interaction.locationStr} | ${value.guest.name}`} />
                 </ListItem>
               ))}
             </List>
@@ -118,10 +114,8 @@ class SimpleList extends React.Component {
                   button
                   onClick={this.handleToggle(key_array[value_array.indexOf(value)], value)}
                 >
-                  <ListItemText primary={`${value.interaction.description}`} />
-                  <ListItemText primary={`${value.interaction.creationTimestamp}`} />
-                  <ListItemText primary={`${value.interaction.locationStr}`} />
-                  <ListItemText primary={`${value.guest.name}`} />
+                <ListItemText primary={`${value.interaction.description}`} secondary = {`${value.interaction.creationTimestamp} | ${value.interaction.locationStr} | ${value.guest.name}`} />
+
                 </ListItem>
               ))}
             </List>
