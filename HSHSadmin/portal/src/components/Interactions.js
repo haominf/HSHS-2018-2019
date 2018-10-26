@@ -1,0 +1,57 @@
+import React, {Component} from 'react';
+import * as firebase from 'firebase';
+import {CheckListCard} from './cards/CheckListCard'
+import ListCard from './cards/ListCard'
+import { Nav } from "./navbar/Nav";
+import Button from "@material-ui/core/Button";
+import SimpleList from './cards/SimpleList';
+
+class InteractionsPage extends Component {
+    constructor(props) {
+        super(props);
+        let self = this;
+    }
+
+    render() {
+        /*return (
+            <div >
+              <ListCard
+                  label = "Interactions"
+                  dataRef = {firebase.database().ref("/interactions")}
+                  hasTitle = {false}
+                  style = {{flex: 1, margin: 10}}/>
+            </div>
+        );*/
+        return (
+			<div
+				style={{
+					backgroundColor: "#dce0e2",
+					height: "100%",
+					width: "100%",
+					flexDirection: "row",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "space-evenly",
+					margin: "auto",
+					flexWrap: "wrap"
+				}}
+			>
+				<div>
+					<Nav />
+					<main>
+						<SimpleList
+                            dataRef = {firebase.database().ref("/interactions")}
+                            hasTitle = {false}/>
+					</main>
+				</div>
+			</div>
+		);
+    }
+
+    componentWillUnmount() {
+        if (this.statePromises)
+            this.statePromises.forEach(p => p.cancel());
+    }
+}
+
+export default InteractionsPage;

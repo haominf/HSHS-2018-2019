@@ -193,6 +193,7 @@ export default class GuestHistoryModule extends Component {
     // TODO isActionItem is janky
     _formatHistoryForTimeline = (relatedHistory) => {
         let reformattedHistory = relatedHistory.map((i) => {
+                      // This for displaying date 
                       let date = new Date(i.creationTimestamp).toDateString();
                       let otherGuests = [];
                       if (this.props.allGuests != undefined) {
@@ -291,7 +292,8 @@ const styles = StyleSheet.create({
   underDescText: {
     // color: 'blue',
     // textDecorationLine: 'underline',
-    paddingLeft: 3
+    paddingLeft: 3,
+    marginRight: 30
   },
   underDescIcon: {
     shadowColor: '#000111',

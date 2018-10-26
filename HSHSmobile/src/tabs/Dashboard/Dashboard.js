@@ -198,95 +198,98 @@ class Dashboard extends Component {
     // I'm not sure if this is the best way to have logical statements within renders, but it's not the worst way!
     render() {
         return (
-
-            (this.props.loading && <ActivityIndicator animating size="large"/>) ||
-
-            (!this.props.loading &&
-                <View style={{flex: 1}}>
-                {renderSeperator()}
-                    <MapView
-                        showsUserLocation={true}
-                        userLocationAnnotationTitle={""}
-                        region={{
-                            latitude: this.state.curLat,
-                            longitude: this.state.curLong,
-                            latitudeDelta: 0.002,
-                            longitudeDelta: 0.005
-                        }}
-                        style={{
-                            height: this.state.isMapFullScreen ? Dimensions.get('window').height * 0.4 : Dimensions.get('window').height,
-                            width: Dimensions.get('window').width,
-                            margin: 0
-                        }}
-                        >
-                        {
-                           this.props.actionItems && this.renderMarkers()
-                        }
-                    </MapView>
-                    {renderSeperator()}
-
-                    <View style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0
-                    }}>
-                        <Icon
-                            size={36}
-                            underlayColor='transparent'
-                            name={this.state.isMapFullScreen ? 'fullscreen' : 'fullscreen-exit'}
-                            onPress={() => {
-                                this.setState(previousState => {
-                                    return {isMapFullScreen: !previousState.isMapFullScreen};
-                                });
-                            }}/>
-                    </View>
-
-                    <View style={{
-                        position: 'absolute',
-                        top: 5,
-                        right: 5
-                    }}>
-                        <Icon
-                            size={28}
-                            underlayColor='transparent'
-                            name='my-location'
-                            color='#0579f9'
-                            onPress={() => {
-                                navigator.geolocation.getCurrentPosition((pos) => {
-                                  this.setState({
-                                    curLat: pos.coords.latitude,
-                                    curLong: pos.coords.longitude
-                                  });
-                                }, (error) => {
-                                  Alert.alert(error.message);
-                                }, {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000});
-                            }}
-                        />
-                    </View>
-
-                    <View style={{flex: 1}}>
-                      {this._renderSelectedActionItem()}
-
-                      <View style={{flex: 1, backgroundColor: '#f7f7f7'}}>
-                        <Lottery_module
-                          style={{flex: 1}}
-                          showDialogCallback={() => {this._showLotteryInputDialog()}}
-                          winners={this.state.lotteryWinner}
-                        />
-
-                        <Prompt
-                          title="Please enter winners"
-                          visible={this.state.promptVisible}
-                          onCancel={ () => this.setState({promptVisible: false}) }
-                          onSubmit={ value => {
-                            enterWinners(value, new Date());
-                            this.setState({promptVisible: false})
-                          }}
-                        />
-                      </View>
-                    </View>
-                </View>
-            )
+            <View style={{flex: 1, alignContent: 'center', alignItems: 'center', justifyContent:"center"}}>
+                <Text style={{alignContent: 'center', textAlign: 'center'}}>This page is currently under construction</Text>
+            </View>
+            //
+            // (this.props.loading && <ActivityIndicator animating size="large"/>) ||
+            //
+            // (!this.props.loading &&
+            //     <View style={{flex: 1}}>
+            //     {renderSeperator()}
+            //         <MapView
+            //             showsUserLocation={true}
+            //             userLocationAnnotationTitle={""}
+            //             region={{
+            //                 latitude: this.state.curLat,
+            //                 longitude: this.state.curLong,
+            //                 latitudeDelta: 0.002,
+            //                 longitudeDelta: 0.005
+            //             }}
+            //             style={{
+            //                 height: this.state.isMapFullScreen ? Dimensions.get('window').height * 0.4 : Dimensions.get('window').height,
+            //                 width: Dimensions.get('window').width,
+            //                 margin: 0
+            //             }}
+            //             >
+            //             {
+            //                this.props.actionItems && this.renderMarkers()
+            //             }
+            //         </MapView>
+            //         {renderSeperator()}
+            //
+            //         <View style={{
+            //             position: 'absolute',
+            //             top: 0,
+            //             left: 0
+            //         }}>
+            //             <Icon
+            //                 size={36}
+            //                 underlayColor='transparent'
+            //                 name={this.state.isMapFullScreen ? 'fullscreen' : 'fullscreen-exit'}
+            //                 onPress={() => {
+            //                     this.setState(previousState => {
+            //                         return {isMapFullScreen: !previousState.isMapFullScreen};
+            //                     });
+            //                 }}/>
+            //         </View>
+            //
+            //         <View style={{
+            //             position: 'absolute',
+            //             top: 5,
+            //             right: 5
+            //         }}>
+            //             <Icon
+            //                 size={28}
+            //                 underlayColor='transparent'
+            //                 name='my-location'
+            //                 color='#0579f9'
+            //                 onPress={() => {
+            //                     navigator.geolocation.getCurrentPosition((pos) => {
+            //                       this.setState({
+            //                         curLat: pos.coords.latitude,
+            //                         curLong: pos.coords.longitude
+            //                       });
+            //                     }, (error) => {
+            //                       Alert.alert(error.message);
+            //                     }, {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000});
+            //                 }}
+            //             />
+            //         </View>
+            //
+            //         <View style={{flex: 1}}>
+            //           {this._renderSelectedActionItem()}
+            //
+            //           <View style={{flex: 1, backgroundColor: '#f7f7f7'}}>
+            //             <Lottery_module
+            //               style={{flex: 1}}
+            //               showDialogCallback={() => {this._showLotteryInputDialog()}}
+            //               winners={this.state.lotteryWinner}
+            //             />
+            //
+            //             <Prompt
+            //               title="Please enter winners"
+            //               visible={this.state.promptVisible}
+            //               onCancel={ () => this.setState({promptVisible: false}) }
+            //               onSubmit={ value => {
+            //                 enterWinners(value, new Date());
+            //                 this.setState({promptVisible: false})
+            //               }}
+            //             />
+            //           </View>
+            //         </View>
+            //     </View>
+            // )
         );
     }
 }

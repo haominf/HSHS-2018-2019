@@ -175,31 +175,31 @@ export default class Login extends Component {
         Navigation.startTabBasedApp({
             tabs: [
                 {
-                    label: 'dashboard',
+                    label: 'Dashboard',
                     screen: 'Dashboard',
                     title: 'Dashboard',
                     icon: homeIcon
                 },
                 {
-                    label: 'action items',
+                    label: 'Action items',
                     screen: 'ActionItem_list',
                     title: 'Action Items',
                     icon: actionItemIcon,
                 },
                 {
-                    label: 'interaction',
+                    label: 'Interaction',
                     screen: 'Interaction_new',
                     title: 'Add Interaction',
                     icon: checkinIcon,
                 },
                 {
-                    label: 'guests',
+                    label: 'Guests',
                     screen: 'Guest_list',
                     title: 'Guests',
                     icon: guestsIcon,
                 },
                 {
-                    label: 'resources',
+                    label: 'Resources',
                     screen: 'Resources_menu',
                     title: 'Resources',
                     icon: resourcesIcon
