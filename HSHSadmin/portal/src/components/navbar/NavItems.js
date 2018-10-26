@@ -18,6 +18,7 @@ import Route from "react-router/Route";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import NoSsr from "@material-ui/core/NoSsr";
+import DashboardIcon from "@material-ui/icons/Dashboard";
 
 class ListItemLink1 extends React.Component {
 	renderLink = itemProps => <Link to={this.props.to} {...itemProps} />;
@@ -43,6 +44,11 @@ ListItemLink1.propTypes = {
 
 export const navActionItems = (
 	<div>
+		<ListItemLink1
+			to="/dashboard"
+			primary="Dashboard"
+			icon={<DashboardIcon />}
+		/>
 		<ListItemLink1
 			to="/volunteers"
 			primary="Volunteers"
