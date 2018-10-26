@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import * as firebase from "firebase";
 import { auth } from "../../firebase";
 import * as routes from "../../constants/routes";
-import TextField from "material-ui/TextField";
-import Card, { CardContent } from "material-ui/Card";
-import Button from "material-ui/Button";
+import TextField from "@material-ui/core/TextField";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Button from "@material-ui/core/Button";
 
 const byPropKey = (propertyName, value) => () => ({
 	[propertyName]: value
@@ -34,12 +35,29 @@ class SignInCard extends Component {
 				return firebase.auth().signInWithEmailAndPassword(email, password);
 			})
 			.then(() => {
-				this.setState(() => ({ ...INITIAL_STATE }));
-				// history.push(routes.PANEL);
-				history.push(routes.DASHBOARD);
+				firebase
+					.auth()
+					.currentUser.getIdTokenResult()
+					.then(idTokenResult => {
+						// Confirm the user is an Admin.
+						if (!!idTokenResult.claims.admin) {
+							// Show admin UI.
+							console.log("isadmin");
+							this.setState(() => ({ ...INITIAL_STATE }));
+							history.push(routes.DASHBOARD);
+							//showAdminUI();
+						} else {
+							// Show regular user UI.
+							console.log("isuser");
+							//showRegularUI();
+						}
+					})
+					.catch(error => {
+						console.error(error);
+					});
 			})
 			.catch(error => {
-				this.setState(byPropKey("error", error));
+				console.error(error);
 			});
 
 		event.preventDefault();
@@ -49,12 +67,26 @@ class SignInCard extends Component {
 		const { email, password } = this.state;
 
 		return (
-			<Card style={this.props.style}>
+			//<Card style={this.props.style}>
+			<Card
+				style={{
+					backgroundColor: "transparent",
+					shadowColor: "transparent",
+					width: "25%",
+					height: "30%",
+					outline: "none",
+					border: "none",
+					borderRadius: 0,
+					boxShadow: "none"
+				}}
+			>
 				<CardContent>
 					<form onSubmit={this.submit}>
 						<TextField
 							style={{
-								width: "100%"
+								width: "100%",
+								backgroundColor: "white",
+								marginBottom: "0.5%"
 							}}
 							autoFocus
 							label="Email"
@@ -63,12 +95,13 @@ class SignInCard extends Component {
 							onChange={event =>
 								this.setState(byPropKey("email", event.target.value))
 							}
-							placeholder="user@mail.com"
 						/>
 						<br />
 						<TextField
 							style={{
-								width: "100%"
+								width: "100%",
+								backgroundColor: "white",
+								marginBottom: "8%"
 							}}
 							label="Password"
 							type="password"
@@ -76,14 +109,19 @@ class SignInCard extends Component {
 							onChange={event =>
 								this.setState(byPropKey("password", event.target.value))
 							}
-							placeholder="password"
 						/>
 						<br />
 						<br />
 						<Button
+							style={{
+								alignItems: "center",
+								width: "100%",
+								backgroundColor: "red",
+								height: 45
+							}}
 							label="SignIn"
 							type="submit"
-							variant="raised"
+							variant="contained"
 							color="secondary"
 						>
 							Sign In

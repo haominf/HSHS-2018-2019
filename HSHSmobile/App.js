@@ -9,9 +9,9 @@ export default () => {
 };
 
 class App {
-  constructor() {
-    this.startApp();
-  }
+    constructor() {
+        this.startApp();
+    }
 
     startApp() {
         // this will start our app
@@ -19,14 +19,11 @@ class App {
         Navigation.registerComponent('Login', () => Login, store, Provider);
         Navigation.registerComponent('Signup', () => Signup);
 
-        // Navigation.registerComponent('Login', () => GuestListNew, store, Provider);
-
         Navigation.startSingleScreenApp({
             screen: {
                 screen: 'Login',
-                //title: 'Dashboard',
-                navigatorStyle: { navBarHidden: true },
-             },
+                navigatorStyle: {navBarHidden: true},
+            },
         });
     }
 }

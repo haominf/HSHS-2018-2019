@@ -66,8 +66,8 @@ function getInitialState() {
       longitude: -71.1199,
     },
     locationStr: "Shelter",
-    date: Moment().format('YYYY-MM-DD'),
-    interactionTimeStamp: Moment().format('YYYY-MM-DD'),
+    date: Moment().format('YYYY/MM/DD'),
+    interactionTimeStamp: Moment().format('YYYY/MM/DD'),
     description: "",
     items: [
       {name: "PB&J sandwiches", count: 0, id: 0},
@@ -222,6 +222,7 @@ class Interaction_new extends Component {
         return (
             <View style = {styles.container}>
               <ScrollView style={{width: "100%"}}>
+              
                 <View style={{marginTop: '5%', backgroundColor: '#F7f7f7'}}>
                   <ChooseLocation
                     onChangeLocation={(locationStr, locationCoord) =>
@@ -233,6 +234,7 @@ class Interaction_new extends Component {
                     locationCoord={this.props.locationCoord}
                   />
                 </View>
+
                 <View style = {styles.back}>
                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                       <View style={{flex: 0.5, flexDirection: 'row'}}>

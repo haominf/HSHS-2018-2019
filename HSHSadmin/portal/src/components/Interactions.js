@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import * as firebase from "firebase";
+import { CheckListCard } from "./cards/CheckListCard";
+import ListCard from "./cards/ListCard";
 import { Nav } from "./navbar/Nav";
+import Button from "@material-ui/core/Button";
+import SimpleList from "./cards/SimpleList";
 
 class InteractionsPage extends Component {
 	constructor(props) {
@@ -11,6 +13,15 @@ class InteractionsPage extends Component {
 	}
 
 	render() {
+		/*return (
+            <div >
+              <ListCard
+                  label = "Interactions"
+                  dataRef = {firebase.database().ref("/interactions")}
+                  hasTitle = {false}
+                  style = {{flex: 1, margin: 10}}/>
+            </div>
+        );*/
 		return (
 			<div
 				style={{
@@ -28,25 +39,19 @@ class InteractionsPage extends Component {
 				<div>
 					<Nav />
 					<main>
-						<h1>THIS IS INTERACTIONS PAGE</h1>
-						<Button
-							color={"secondary"}
-							size={"large"}
-							full-width={"true"}
-							href={"/dashboard"}
-							variant={"outlined"}
-						>
-							Back to Dashboard
-						</Button>
+						<SimpleList
+							dataRef={firebase.database().ref("/interactions")}
+							hasTitle={false}
+						/>
 					</main>
 				</div>
 			</div>
 		);
 	}
 
-	// componentWillUnmount() {
-	// 	if (this.statePromises) this.statePromises.forEach(p => p.cancel());
-	// }
+	componentWillUnmount() {
+		if (this.statePromises) this.statePromises.forEach(p => p.cancel());
+	}
 }
 
-export default withRouter(InteractionsPage);
+export default InteractionsPage;

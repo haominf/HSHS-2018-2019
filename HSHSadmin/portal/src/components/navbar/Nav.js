@@ -50,7 +50,7 @@ class Nav extends Component {
 		return (
 			<div className={styles.root}>
 				<AppBar
-					position="absolute"
+					position="fixed"
 					className={styles.appBar}
 					style={{ backgroundColor: "#CE0909" }}
 				>

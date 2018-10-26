@@ -19,7 +19,7 @@ import ColorPicker from '../../modules/ColorPicker';
 import TagGuestPopup from "../../modules/popups/TagGuestPopup"
 import renderSeperator from '../../modules/UI/renderSeperator'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {addNewActionItem, getActionItems, editActionItem, deleteActionItem, markActionItemAsDone} from "../../redux/actions";
+import {addNewActionItem, getActionItems, editActionItem, deleteActionItem, markActionItemAsDone, deleteCompletedActionItem} from "../../redux/actions";
 import DatePicker from 'react-native-datepicker';
 import Moment from 'moment';
 import dupNavFix from '../../dupNavFix';
@@ -69,7 +69,7 @@ class ActionItem_edit extends Component {
             },
             selectedIndex: this.props.locationCoord ? 1 : 0,
             locationStr: this.props.locationStr ? this.props.locationStr : "Shelter",
-            selectedDate: this.props.selectedDate ? this.props.selectedDate : Moment().format('YYYY-MM-DD'),
+            selectedDate: this.props.selectedDate ? this.props.selectedDate : Moment().format('YYYY/MM/DD'),
             description: this.props.description ? this.props.description : "",
             color: this.props.color ? this.props.color : null,
             creationTimestamp: this.props.creationTimestamp ? this.props.creationTimestamp : Moment().format()
@@ -101,13 +101,16 @@ class ActionItem_edit extends Component {
                     return;
                 }
                 // It's new if there is no ID
+                // TODO: I also need to know whether they ex or nah in the section
                 if (!this.state.actionItemId) {
                     addNewActionItem(false, this.state.title, this.state.creationTimestamp, this.state.locationCoord, this.state.locationStr, this.state.selectedDate, this.state.description, this.state.taggedGuests, "volunteerId", this.state.color);
                 } else {
                     editActionItem(this.state.actionItemId, false, this.state.title, this.state.creationTimestamp, this.state.locationCoord, this.state.locationStr, this.state.selectedDate, this.state.description, this.state.taggedGuests, "volunteerId", this.state.color);
+                    deleteCompletedActionItem(this.state.actionItemId);
                 }
                 getActionItems();
-                this.props.navigator.pop({
+
+                this.props.navigator.popToRoot({
                     animated: true, // does the pop have transition animation or does it happen immediately (optional)
                     animationType: 'slide-horizontal', // 'fade' (for both) / 'slide-horizontal' (for android) does the pop have different transition animation (optional)
                 });
