@@ -47,6 +47,7 @@ class SignInCard extends Component {
               history.push(routes.DASHBOARD);
               //showAdminUI();
             } else {
+              alert("Sorry, you don't have access to this site. \nPlease contact an admin if you have any questions");
               // Show regular user UI.
               console.log("isuser");
               //showRegularUI();
