@@ -40,13 +40,17 @@ class SimpleList extends React.Component {
             var newContent = this.state.listContent;
             var childKey = childSnapshot.key;
             var childData = childSnapshot.val();
-            firebase.database().ref("/guests/" + childData.guestIds[0]).once('value').then(function(guest_snapshot) {
-                var guest = guest_snapshot.val();
-                newContent[childKey] = {interaction: childData, guest: guest};
-                self.setState({
-                  listContent: newContent
+            if (childData.guestIds != null) {
+                firebase.database().ref("/guests/" + childData.guestIds[0]).once('value').then(function(guest_snapshot) {
+                    var guest = guest_snapshot.val();
+                    newContent[childKey] = {interaction: childData, guest: guest};
+                    self.setState({
+                      listContent: newContent
+                    });
                 });
-            });
+            } else {
+                newContent[childKey] = {interaction: childData, guest: "No guest tagged"};
+            }
           });
       });
     }
